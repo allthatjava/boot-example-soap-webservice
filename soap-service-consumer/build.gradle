@@ -1,0 +1,71 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.6.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'brian.example.boot'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    jaxb
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+sourceSets{
+/*
+	jaxb {
+		java.srcDirs = ['src/generated-sources/java']
+	}
+	main {
+    	compileClasspath += jaxb.output
+    	runtimeClasspath += jaxb.output
+	}
+*/
+	main.java.srcDirs = ['src/generated-sources/java', 'src/main/java']
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.ws:spring-ws-core")
+    compile group: 'javax.xml.bind', name: 'jaxb-api', version: '2.2.7'
+
+    jaxb('com.sun.xml.bind:jaxb-xjc:2.2.7', 'com.sun.xml.bind:jaxb-impl:2.2.7')
+}
+
+task jaxb {
+    def jaxbTargetDir = file("/src/generated-sources/java")
+
+    doLast() {
+        jaxbTargetDir.mkdirs()
+
+        ant.taskdef(
+                name: "xjc",
+                classname: "com.sun.tools.xjc.XJCTask",
+                classpath: configurations.jaxb.asPath
+        )
+        ant.jaxbTargetDir = jaxbTargetDir
+
+        ant.xjc(
+                destdir: jaxbTargetDir,
+                schema: 'http://localhost:8081/ws/post-webservice.wsdl',
+                package: 'soap.webservice.consumer.model' )
+        {
+            arg(value: "-wsdl")
+        }
+    }
+}
