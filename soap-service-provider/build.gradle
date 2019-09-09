@@ -27,6 +27,12 @@ configurations {
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
+def jaxbTargetDir = file("/src/generated-sources/java")
+    
+sourceSets{
+	main.java.srcDirs = [ jaxbTargetDir, 'src/main/java']
+}
+
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-web-services")
     compile("wsdl4j:wsdl4j:1.6.1")
@@ -34,7 +40,6 @@ dependencies {
 }
 
 task jaxb {
-    def jaxbTargetDir = file("/src/generated-sources/java")
 
     doLast() {
         jaxbTargetDir.mkdirs()
@@ -44,10 +49,9 @@ task jaxb {
             classname: "com.sun.tools.xjc.XJCTask",
             classpath: configurations.jaxb.asPath
         )
-        ant.jaxbTargetDir = jaxbTargetDir
 
         ant.xjc(
-                destdir: 'src/main/java',
+                destdir: jaxbTargetDir,
                 package: 'soap.webservice.provider.webservice.model',
                 schema: 'src/main/resources/post-webservice.xsd'
         )

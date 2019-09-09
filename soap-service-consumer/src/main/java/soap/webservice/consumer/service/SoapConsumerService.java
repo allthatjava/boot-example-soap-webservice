@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import soap.webservice.consumer.configure.SoapConsumer;
 import soap.webservice.consumer.model.PostWebserviceRequest;
+import soap.webservice.consumer.model.PostWebserviceResponse;
 
 @Service
 public class SoapConsumerService {
@@ -19,6 +20,8 @@ public class SoapConsumerService {
 		PostWebserviceRequest postReq = new PostWebserviceRequest();
 		postReq.setPostId( BigInteger.valueOf(1) );
 		
-		return con.getPost(postReq).getSubject();
+		PostWebserviceResponse postRes = new PostWebserviceResponse();
+		
+		return con.getPost(postReq, postRes, "PostWebServiceRequest").getSubject();
 	}
 }

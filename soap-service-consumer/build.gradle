@@ -27,15 +27,6 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 sourceSets{
-/*
-	jaxb {
-		java.srcDirs = ['src/generated-sources/java']
-	}
-	main {
-    	compileClasspath += jaxb.output
-    	runtimeClasspath += jaxb.output
-	}
-*/
 	main.java.srcDirs = ['src/generated-sources/java', 'src/main/java']
 }
 
@@ -58,12 +49,12 @@ task jaxb {
                 classname: "com.sun.tools.xjc.XJCTask",
                 classpath: configurations.jaxb.asPath
         )
-        ant.jaxbTargetDir = jaxbTargetDir
 
         ant.xjc(
                 destdir: jaxbTargetDir,
-                schema: 'http://localhost:8081/ws/post-webservice.wsdl',
-                package: 'soap.webservice.consumer.model' )
+//                schema: 'http://localhost:8081/ws/post-webservice.wsdl',	// You can use remote or local wsdl
+				schema: 'src/main/resources/post-webservice.wsdl',			// or use local wsdl file
+                package: 'soap.webservice.consumer.model' )					// Package name for generated Java code
         {
             arg(value: "-wsdl")
         }

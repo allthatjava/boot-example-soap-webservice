@@ -9,5 +9,5 @@ build
 **/.settings/
 **/bin/
 **/build/
-
+**/generated-sources/
 

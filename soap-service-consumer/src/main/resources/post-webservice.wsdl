@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:sch="http://localhost:8080/post-webservice" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://localhost:8080/post-webservice" targetNamespace="http://localhost:8080/post-webservice">
+  <wsdl:types>
+    <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://localhost:8080/post-webservice" version="1.0">
+
+    <!-- Echo Test Req/Res -->
+    <xs:element name="postWebserviceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="postId" type="xs:integer"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="postWebserviceResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="postId" type="xs:integer"/>
+                <xs:element name="subject" type="xs:string"/>
+                <xs:element name="content" type="xs:string"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+  </wsdl:types>
+  <wsdl:message name="postWebserviceRequest">
+    <wsdl:part element="tns:postWebserviceRequest" name="postWebserviceRequest">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:message name="postWebserviceResponse">
+    <wsdl:part element="tns:postWebserviceResponse" name="postWebserviceResponse">
+    </wsdl:part>
+  </wsdl:message>
+  <wsdl:portType name="post-webservice">
+    <wsdl:operation name="postWebservice">
+      <wsdl:input message="tns:postWebserviceRequest" name="postWebserviceRequest">
+    </wsdl:input>
+      <wsdl:output message="tns:postWebserviceResponse" name="postWebserviceResponse">
+    </wsdl:output>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="post-webserviceSoap11" type="tns:post-webservice">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="postWebservice">
+      <soap:operation soapAction=""/>
+      <wsdl:input name="postWebserviceRequest">
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output name="postWebserviceResponse">
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="post-webserviceService">
+    <wsdl:port binding="tns:post-webserviceSoap11" name="post-webserviceSoap11">
+      <soap:address location="http://localhost:8081/ws"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
