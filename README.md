@@ -1,11 +1,45 @@
 # Spring Boot - Webservice Provider / Consumer
-This example contains two parts SOAP Webservice Provider and SOAP Webservice Consumer. This is a minimal example to make how to make a Webservice Provider and how to consumer a Webservice based on the given WSDL.
+This example contains two parts SOAP Webservice Provider and SOAP Webservice Consumer. This is a minimal example for how to make a Webservice Provider and how to consumer the Webservice based on the given WSDL.
 
+* Provider : `soap-webservice-provider` will provide the Soap Webservice 
+* Consumer : `soap-webservice-consumer` will use above service as a Soap Webservice consumer. 
+
+*NOTE: This doesn't have extensive example or sample data but, this example will give you an idea how you can apply this technology on your application.*
 
 ## Web Service Provider
-Even though the Java code would be generated, minimum xsd must be provided to generate the Java code.
+Even though the Java code would be generated, minimum __xsd__ must be provided to generate the Java code.
+
+##### XSD
+
+```
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:tns="http://localhost:8081/post-webservice"
+           targetNamespace="http://localhost:8081/post-webservice"
+           elementFormDefault="qualified">
+
+    <xs:element name="postWebserviceRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="postId" type="xs:integer" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="postWebserviceResponse">
+        <xs:complexType>
+            <xs:sequence >
+                <xs:element name="postId" type="xs:integer" />
+                <xs:element name="subject" type="xs:string" />
+                <xs:element name="content" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>
+```
 
 ##### Gradle
+The task `jaxb` will generate Java code based on __xsd__.
 
 ```
 configurations {
@@ -13,7 +47,7 @@ configurations {
 }
 ...
 def jaxbTargetDir = file("/src/generated-sources/java")
-    
+
 sourceSets{
 	main.java.srcDirs = [ jaxbTargetDir, 'src/main/java']
 }
@@ -52,7 +86,7 @@ To generate the Java code from __xsd__, use `jaxb` task.
 ```
 
 ##### WSDL 
-I've set the server port to 8081 for the provider to avoid port conflict when you run both application on the same machine.
+I've set the server port to 8081 for the provider to avoid port conflict when you run both applications on the same machine.
 
 * In application.properties
 
@@ -60,7 +94,7 @@ I've set the server port to 8081 for the provider to avoid port conflict when yo
 server.port=8081
 ```
 
-* Once you application is run ( You can run with gradle command `./gradlew clean jaxb build bootRun`, you can see the live WSDL from the browser with the following URL.
+* Once you application is running ( You can run with gradle command `./gradlew clean jaxb build bootRun`, you can see the live WSDL from the browser with the following URL.
 
 ```
 http://localhost:8081/ws/post-webservice.wsdl
@@ -69,14 +103,13 @@ http://localhost:8081/ws/post-webservice.wsdl
 
 
 ## Web Service Consumer
+This example will show how to consume the existing webservice. 
 
-
-#### Running Gradle script
-To generate the Client side Java code from __wsdl__, use `jaxb` task.
-
+##### Running Gradle script
+To generate the Client side Java code from __WSDL__, use `jaxb` task.
 
 ##### Gradle
-The following gradle script will generate Java code based on given WSDL file
+The following part of the gradle script will generate Java code based on given __WSDL__ file
 
 ```
 configurations {
@@ -108,10 +141,10 @@ task jaxb {
         )
 
         ant.xjc(
-					destdir: jaxbTargetDir,
-//					schema: 'http://localhost:8081/ws/post-webservice.wsdl',	// You can use remote or local wsdl
-					schema: 'src/main/resources/post-webservice.wsdl',			// or use local wsdl file
-					package: 'soap.webservice.consumer.model' )						// Package name for generated Java code
+            destdir: jaxbTargetDir,
+//          schema: 'http://localhost:8081/ws/post-webservice.wsdl',    // You can use remote or local wsdl
+            schema: 'src/main/resources/post-webservice.wsdl',          // or use local wsdl file
+            package: 'soap.webservice.consumer.model' )                 // Package name for generated Java code
         {
             arg(value: "-wsdl")
         }
@@ -119,7 +152,7 @@ task jaxb {
 }
 ```
 
-* To run the example, run the following command on the command line
+* To run the example, run the following command
 
 ```
 ./gradlew clean jaxb build bootRun
@@ -130,15 +163,13 @@ task jaxb {
 ```
 public class SoapConsumer extends WebServiceGatewaySupport {
 
-	@SuppressWarnings("unchecked")
-	public <T,R> R getPost(T postReq, R postRes, String serviceName) {
-		
-		postRes = (R) getWebServiceTemplate()
-				.marshalSendAndReceive("http://localhost:8081/ws/"+serviceName, 
-						postReq, null);
-		
-		return postRes;
-	}
+    @SuppressWarnings("unchecked")
+    public <T,R> R sendAndReceive(T postReq, String serviceName) {
+        
+        return (R) getWebServiceTemplate()
+                .marshalSendAndReceive("http://localhost:8081/ws/"+serviceName, 
+                        postReq, null);
+    }
 }
 ```
 
@@ -151,7 +182,7 @@ public class WebserviceConsumerConfig {
 	@Bean
 	public Jaxb2Marshaller marshaller() {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setContextPath("soap.webservice.consumer.model");
+		marshaller.setContextPath("soap.webservice.consumer.model");  // Where generated Java code would be for the webservice
 		return marshaller;
 	}
 
@@ -166,7 +197,7 @@ public class WebserviceConsumerConfig {
 }
 ```
 
-#### Test 
+##### Consumer Test 
 The counter part(soap-webservice-provider) application must be up for the test.
 
 ```

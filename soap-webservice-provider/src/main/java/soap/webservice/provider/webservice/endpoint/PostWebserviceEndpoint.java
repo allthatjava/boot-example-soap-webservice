@@ -16,7 +16,7 @@ public class PostWebserviceEndpoint extends WsConfigurerAdapter {
 
     private Logger logger = LoggerFactory.getLogger(PostWebserviceEndpoint.class.getSimpleName());
 
-    @PayloadRoot(namespace="http://localhost:8080/post-webservice", localPart="postWebserviceRequest")
+    @PayloadRoot(namespace="http://localhost:8081/post-webservice", localPart="postWebserviceRequest")
     @ResponsePayload
     public PostWebserviceResponse getPost(@RequestPayload PostWebserviceRequest request){
 

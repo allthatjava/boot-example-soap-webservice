@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns:tns="http://localhost:8080/post-webservice"
-           targetNamespace="http://localhost:8080/post-webservice"
+           xmlns:tns="http://localhost:8081/post-webservice"
+           targetNamespace="http://localhost:8081/post-webservice"
            elementFormDefault="qualified">
 
-    <!-- Echo Test Req/Res -->
     <xs:element name="postWebserviceRequest">
         <xs:complexType>
             <xs:sequence>

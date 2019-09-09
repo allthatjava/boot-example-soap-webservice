@@ -10,7 +10,7 @@ public class WebserviceConsumerConfig {
 	@Bean
 	public Jaxb2Marshaller marshaller() {
 		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setContextPath("soap.webservice.consumer.model");
+		marshaller.setContextPath("soap.webservice.consumer.model");	// Where generated Java code would be for the webservice
 		return marshaller;
 	}
 

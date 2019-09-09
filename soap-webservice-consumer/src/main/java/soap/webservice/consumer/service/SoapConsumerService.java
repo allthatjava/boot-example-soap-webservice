@@ -20,8 +20,8 @@ public class SoapConsumerService {
 		PostWebserviceRequest postReq = new PostWebserviceRequest();
 		postReq.setPostId( BigInteger.valueOf(1) );
 		
-		PostWebserviceResponse postRes = new PostWebserviceResponse();
+		PostWebserviceResponse postRes = con.sendAndReceive(postReq, "PostWebServiceRequest");
 		
-		return con.getPost(postReq, postRes, "PostWebServiceRequest").getSubject();
+		return postRes.getSubject();
 	}
 }

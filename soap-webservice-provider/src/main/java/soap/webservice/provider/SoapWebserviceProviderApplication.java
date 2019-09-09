@@ -34,7 +34,7 @@ public class SoapWebserviceProviderApplication {
 		DefaultWsdl11Definition wsdl11Definition = new DefaultWsdl11Definition();
 		wsdl11Definition.setPortTypeName("post-webservice");
 		wsdl11Definition.setLocationUri("/ws");
-		wsdl11Definition.setTargetNamespace("http://localhost:8080/post-webservice");
+		wsdl11Definition.setTargetNamespace("http://localhost:8081/post-webservice");
 		wsdl11Definition.setSchema(eaaWebServiceSchema);
 		return wsdl11Definition;
 	}
